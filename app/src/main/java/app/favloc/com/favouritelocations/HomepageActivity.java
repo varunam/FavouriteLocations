@@ -625,8 +625,7 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
             alertDialog2.setIcon(R.drawable.favlocicon);
             alertDialog2.setMessage("FavLoc simplifies the way you are bookmarking your favourite locations!\n" +
                     "The app helps to capture, share or navigate to any of your favourite locations\n" +
-                    "The app has been developed by MaxTech, Bengaluru \n" +
-                    "Contact us to learn \"Android App Development\" \n");
+                    "Contact us if you are interested in learning \"Android App Development\" \n");
             alertDialog2.setPositiveButton("OK", null);
             alertDialog2.create().show();
         }
