@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">Favourite Locations</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="facebook_app_id">504014093263190</string>
+    <string name="maps_api_key">AIzaSyAU7AUlI890Dmb0513KPpY5OTSb-zL-AYo</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="welcome_note">Welcome to Favourite Locations</string>
+    <string name="userNameHint">Email or Username</string>
+    <string name="passwordHint">Password</string>
+    <string name="loginButton">Sign In</string>
+    <string name="OR">OR</string>
+    <string name="createAccountText">Create Account here</string>
+    <string name="forgotPasswordText">Trouble signing in?</string>
+    <string name="emailHint">Email address</string>
+    <string name="signUpTitle">Get Started</string>
+    <string name="firstNameHint">First Name</string>
+    <string name="lastNameHint">Last Name</string>
+    <string name="dateofBirthHint">Date of Birth</string>
+    <string name="localityHint">Locality</string>
+    <string name="signUpButtonHint">Sign Up</string>
+    <string name="resetPasswordHint">Registered email address</string>
+    <string name="resetPasswordButtonHint">RESET PASSWORD</string>
+    <string name="resetPasswordTitleHint">After all you are a Human!</string>
+    <string name="resetPasswordTitleHint2">Let\'s reset it</string>
+    <string name="hpTitleHint">Name this location</string>
+    <string name="hpLandmarkHint">Landmark ex: Near SBM, Behind post office etc.</string>
+    <string name="captureLocationHint">Capture Location</string>
+    <string name="favLocListHint">Favourite Locations</string>
+    <string name="displayCountHint">Loading...</string>
+    
+    <string name="map_type_none">None</string>
+    <string name="map_type_satellite">Satellite</string>
+    <string name="map_type_terrain">Terrain</string>
+    <string name="map_type_normal">Normal</string>
+    <string name="map_type_hybrid">Hybrid</string>
+    <string name="listRowLatHint">Latitude:</string>
+    <string name="listRowLngHint">Longitude:</string>
+    <string name="locationCountZero">You have not saved any favourite location yet</string>
+    <string name="locationCountOne">You have saved only 1 Favourite Location</string>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
+    <string name="savedFavLocs">Saved FavLocs</string>
+    <string name="aboutApp">About app</string>
+    <string name="rateThisApp">Rate this App</string>
+    <string name="appByMaxTech">App Powered by MaxTech</string>
+    <string name="contactUs">Contact us</string>
+    <string name="logOut">Log out</string>
+    <string name="FollowUsFB">Follow us on Facebook</string>
+</resources>

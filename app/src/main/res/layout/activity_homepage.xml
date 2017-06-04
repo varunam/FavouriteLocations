@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context="app.favloc.com.favouritelocations.HomepageActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:id="@+id/relativeLayout">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_below="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <fragment
+                android:id="@+id/mapFragmentID"
+                android:layout_marginBottom="10dp"
+                android:name="com.google.android.gms.maps.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"/>
+
+            <!--<TextView
+                android:id="@+id/hpTitleID"
+                android:layout_gravity="center"
+                android:textSize="@dimen/Title_Size"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:text="@string/hpsaveLocationTitleHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />-->
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/hpLocationTitleID"
+                    android:hint="@string/hpTitleHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/hpLandmarkID"
+                    android:hint="@string/hpLandmarkHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/hpcaptureButtonID"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/buttonTextLight"
+                android:textStyle="bold"
+                android:text="@string/captureLocationHint"
+                android:layout_width="150dp"
+                android:layout_height="35dp" />
+
+            <TextView
+                android:id="@+id/hpDisplayCountID"
+                android:layout_gravity="center"
+                android:layout_marginTop="13dp"
+                android:textStyle="bold"
+                android:text="@string/displayCountHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

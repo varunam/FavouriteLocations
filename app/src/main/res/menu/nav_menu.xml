@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:title="@string/app_name">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:title="@string/savedFavLocs"
+                    android:id="@+id/savedFavLocsID"
+                    android:icon="@drawable/favlocnavicon"/>
+
+                <item
+                    android:title="@string/aboutApp"
+                    android:id="@+id/aboutAppID"
+                    android:icon="@drawable/aboutappicon"/>
+
+                <item
+                    android:id="@+id/rateUsID"
+                    android:icon="@drawable/rateusicon"
+                    android:title="@string/rateThisApp" />
+
+            </group>
+        </menu>
+    </item>
+
+    <item
+        android:title="@string/appByMaxTech"
+        >
+        <menu>
+            <item
+                android:id="@+id/contactUsID"
+                android:icon="@drawable/feedbackicon"
+                android:title="@string/contactUs">
+            </item>
+
+
+            <item
+                android:id="@+id/followUsID"
+                android:icon="@drawable/com_facebook_button_icon"
+                android:title="@string/FollowUsFB" />
+
+            <item
+                android:id="@+id/logoutID"
+                android:icon="@drawable/logouticon"
+                android:actionViewClass="android.support.v7.widget.SearchView"
+                android:title="@string/logOut" />
+        </menu>
+    </item>
+</menu>
