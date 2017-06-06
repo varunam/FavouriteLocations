@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -40,9 +41,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiActivity;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -609,6 +616,47 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         currentLat = String.valueOf(location.getLatitude());
         currentLng = String.valueOf(location.getLongitude());
+
+        LocationSettingsRequest.Builder checkGps = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+
+        checkGps.setAlwaysShow(true);
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, checkGps.build());
+
+        if(result!=null)
+        {
+            result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+                @Override
+                public void onResult(LocationSettingsResult locationSettingsResult) {
+                    final Status status = locationSettingsResult.getStatus();
+
+                    switch (status.getStatusCode()) {
+                        case LocationSettingsStatusCodes.SUCCESS:
+                            // All location settings are satisfied. The client can initialize location
+                            // requests here.
+
+                            break;
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            // Location settings are not satisfied. But could be fixed by showing the user
+                            // a optionsDialog.
+                            try {
+                                // Show the optionsDialog by calling startResolutionForResult(),
+                                // and check the result in onActivityResult().
+                                if (status.hasResolution()) {
+                                    status.startResolutionForResult(HomepageActivity.this, 1000);
+                                }
+                            } catch (IntentSender.SendIntentException e) {
+                                // Ignore the error.
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            // Location settings are not satisfied. However, we have no way to fix the
+                            // settings so we won't show the optionsDialog.
+                            break;
+                    }
+                }
+            });
+        }
     }
 
     @Override
