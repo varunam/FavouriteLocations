@@ -266,12 +266,14 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                 if(locationName.isEmpty())
                 {
                     nameOfLocation.setError("Required");
+                    nameOfLocation.requestFocus();
                     return;
                 }
 
                 if(locationLandmark.isEmpty())
                 {
                     landmarkOfLocation.setError("Required");
+                    landmarkOfLocation.requestFocus();
                     return;
                 }
 
@@ -729,7 +731,7 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                     body.append(" Please fill in your feedback/grievances  \n");
                     body.append("\n Regards, \n");
                     body.append(firebaseAuth.getCurrentUser().getDisplayName());
-                    String developers[] = {"varuvgnc@gmail.com"};
+                    String developers[] = {"varunvgnc@gmail.com"};
                     String company[] = {"0maxtech0@gmail.com"};
 
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto","",null));
