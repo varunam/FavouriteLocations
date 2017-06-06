@@ -25,6 +25,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,7 +48,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -68,12 +73,15 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.zip.Inflater;
+
 public class HomepageActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
 
     private Button saveButton;
     private EditText nameOfLocation, landmarkOfLocation;
     private TextView locCount;
     private ImageView profileImage;
+    private Button shareCurrentLocation;
 
     private FirebaseAuth firebaseAuth;
     private LoginManager loginManager;
@@ -94,6 +102,8 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
     private int uploadCount = 0;
     private boolean facebookUser = false;
     private String facebookUserId, photoUri;
+
+    private Marker marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,12 +256,13 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                 String locationName = nameOfLocation.getText().toString().trim();
                 String locationLandmark = landmarkOfLocation.getText().toString().trim();
 
-                if(locationLandmark.isEmpty())
+                if(locationName.isEmpty())
                 {
                     nameOfLocation.setError("Required");
                     return;
                 }
-                if(locationName.isEmpty())
+
+                if(locationLandmark.isEmpty())
                 {
                     landmarkOfLocation.setError("Required");
                     return;
@@ -271,6 +282,42 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
             }
         });
 
+        shareCurrentLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String locationName = nameOfLocation.getText().toString().trim();
+                String locationLandmark = landmarkOfLocation.getText().toString().trim();
+
+                if(locationName.isEmpty())
+                {
+                    nameOfLocation.setError("Required");
+                    nameOfLocation.requestFocus();
+                    return;
+                }
+
+                if(locationLandmark.isEmpty())
+                {
+                    landmarkOfLocation.setError("Required");
+                    landmarkOfLocation.requestFocus();
+                    return;
+                }
+                        saveLocation();
+                        Toast.makeText(getApplicationContext(), "Sharing location...", Toast.LENGTH_LONG).show();
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT,
+                                "Sharing location from Favourite Locations \n \n" + "Location Name: " +
+                                        nameOfLocation.getText().toString().trim() + "\n" + "Landmark: " +
+                                        landmarkOfLocation +
+                                        "Latitude: " + currentLat + "\n" + "Longitude: " + currentLng + "\n \n"
+                                        + "Click link below to navigate: \n"
+                                        + "https://www.google.co.in/maps/dir//" + currentLat + "," +
+                                        currentLng +"/@" + currentLat + "," + currentLng + ",17z");
+                        sendIntent.setType("text/plain");
+                        sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        startActivity(sendIntent);
+                    }
+                });
     }
 
     private void selectPhotoFromGallery() {
@@ -375,6 +422,8 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void saveLocation() {
+        setMarker(currentLat, currentLng);
+        marker.showInfoWindow();
         String locationName = nameOfLocation.getText().toString().trim();
         String locationLandmark = landmarkOfLocation.getText().toString().trim();
         String locationLat = currentLat;
@@ -386,8 +435,22 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
         FirebaseUser user = firebaseAuth.getCurrentUser();
         databaseReference.child(user.getUid()).child("Locations").child(id).setValue(data);
         Toast.makeText(getApplicationContext(),"Saved location successfully!", Toast.LENGTH_LONG).show();
-        startActivity(new Intent(HomepageActivity.this, FavLocListActivity.class));
-        finish();
+    }
+
+    private void setMarker(String currentLat, String currentLng){
+        if(marker!=null)
+            marker.remove();
+
+
+        MarkerOptions options = new MarkerOptions()
+
+                .title("FavLoc")
+                .draggable(false)
+                .position(new LatLng(Double.parseDouble(currentLat), Double.parseDouble(currentLng)))
+                .snippet("snippet")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.markericon));
+
+        marker = mGoogleMap.addMarker(options);
     }
 
     private void initMap() {
@@ -400,6 +463,7 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
         nameOfLocation = (EditText) findViewById(R.id.hpLocationTitleID);
         landmarkOfLocation = (EditText) findViewById(R.id.hpLandmarkID);
         locCount = (TextView) findViewById(R.id.hpDisplayCountID);
+        shareCurrentLocation = (Button) findViewById(R.id.shareCurrentLocationID);
 
         firebaseAuth = FirebaseAuth.getInstance();
         loginManager = LoginManager.getInstance();
@@ -455,6 +519,28 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
 
         mGoogleApiClient.connect();
 
+        if (mGoogleMap!=null)
+        {
+            mGoogleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+                    View v = getLayoutInflater().inflate(R.layout.info_window, null);
+
+                    TextView iwName = (TextView) v.findViewById(R.id.IWnameID);
+                    TextView iwLandmark = (TextView) v.findViewById(R.id.IWLandmarkID);
+
+                    iwName.setText(nameOfLocation.getText().toString().trim());
+                    iwLandmark.setText(landmarkOfLocation.getText().toString().trim());
+
+                    return v;
+                }
+            });
+        }
     }
 
     //below method takes camera to the specified lat long
@@ -612,12 +698,14 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
         }
         else if (id == R.id.followUsID)
         {
-            /*try {
-                getApplicationContext().getPackageManager().getPackageInfo("com.facebook.katana", 0);
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/FB+BG9n26VQ")));
-            } catch (Exception e) {*/
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/0maxtech0")));
-            //}
+            Intent facebookAppIntent;
+            try {
+                facebookAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/981281535243682"));
+                startActivity(facebookAppIntent);
+            } catch (ActivityNotFoundException e) {
+                facebookAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://facebook.com/0MaxTech0"));
+                startActivity(facebookAppIntent);
+            }
         }
         else if (id == R.id.aboutAppID)
         {
@@ -627,6 +715,7 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                     "The app helps to capture, share or navigate to any of your favourite locations\n" +
                     "Contact us if you are interested in learning \"Android App Development\" \n");
             alertDialog2.setPositiveButton("OK", null);
+            alertDialog2.setNegativeButton(null, null);
             alertDialog2.create().show();
         }
         else if (id==R.id.rateUsID)

@@ -102,6 +102,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <Button
+                android:layout_width="160dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/sharecurrent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/buttonTextLight"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/shareCurrentLocationID" />
+
         </LinearLayout>
 
     </ScrollView>
