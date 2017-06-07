@@ -12,14 +12,24 @@
                     android:icon="@drawable/favlocnavicon"/>
 
                 <item
-                    android:title="@string/aboutApp"
-                    android:id="@+id/aboutAppID"
-                    android:icon="@drawable/aboutappicon"/>
+                    android:title="@string/saveManualFavloc"
+                    android:id="@+id/saveManualFavLocsID"
+                    android:icon="@drawable/favlocnavicon"/>
+
+                <item
+                    android:title="@string/updatePasswordHint"
+                    android:id="@+id/updatePasswordID"
+                    android:icon="@drawable/updatepassword"/>
 
                 <item
                     android:id="@+id/rateUsID"
                     android:icon="@drawable/rateusicon"
                     android:title="@string/rateThisApp" />
+
+                <item
+                    android:title="@string/aboutApp"
+                    android:id="@+id/aboutAppID"
+                    android:icon="@drawable/aboutappicon"/>
 
             </group>
         </menu>

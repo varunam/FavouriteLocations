@@ -718,6 +718,11 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
             startActivity(new Intent(HomepageActivity.this, LoginActivity.class));
             finish();
         }
+        else if (id == R.id.saveManualFavLocsID)
+        {
+            startActivity(new Intent(HomepageActivity.this, ManualSaveActivity.class));
+            finish();
+        }
         else if (id == R.id.contactUsID)
         {
             alertDialog2.setTitle("MaxTech, Bengaluru");
@@ -756,6 +761,11 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                 facebookAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://facebook.com/0MaxTech0"));
                 startActivity(facebookAppIntent);
             }
+        }
+        else if (id == R.id.updatePasswordID)
+        {
+            startActivity(new Intent(HomepageActivity.this, UpdatePasswordActivity.class));
+            finish();
         }
         else if (id == R.id.aboutAppID)
         {

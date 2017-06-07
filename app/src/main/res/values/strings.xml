@@ -39,7 +39,7 @@
     <string name="captureLocationHint">Capture Location</string>
     <string name="favLocListHint">Favourite Locations</string>
     <string name="displayCountHint">Loading...</string>
-    
+
     <string name="map_type_none">None</string>
     <string name="map_type_satellite">Satellite</string>
     <string name="map_type_terrain">Terrain</string>
@@ -62,4 +62,10 @@
     <string name="welcome_note_2">Favourite Locations</string>
     <string name="welcome_note_1">Welcome to</string>
     <string name="infoWindowTitle">Favourite Location</string>
+    <string name="saveManualFavloc">Save FavLoc Manually</string>
+    <string name="updatePasswordHint">Update Password</string>
+    <string name="currentPasswordHint">Current Password</string>
+    <string name="newPasswordHint">New Password</string>
+    <string name="confirmPasswordHint">Confirm Password</string>
+    <string name="updtePassword">Update Password</string>
 </resources>
