@@ -316,9 +316,9 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                         sendIntent.setAction(Intent.ACTION_SEND);
                         sendIntent.putExtra(Intent.EXTRA_TEXT,
                                 "Sharing location from Favourite Locations \n \n" + "Location Name: " +
-                                        nameOfLocation.getText().toString().trim() + "\n" + "Landmark: " +
-                                        landmarkOfLocation +
-                                        "Latitude: " + currentLat + "\n" + "Longitude: " + currentLng + "\n \n"
+                                        locationName + "\n" + "Landmark: " +
+                                        locationLandmark +
+                                        "\nLatitude: " + currentLat + "\n" + "Longitude: " + currentLng + "\n \n"
                                         + "Click link below to navigate: \n"
                                         + "https://www.google.co.in/maps/dir//" + currentLat + "," +
                                         currentLng +"/@" + currentLat + "," + currentLng + ",17z");

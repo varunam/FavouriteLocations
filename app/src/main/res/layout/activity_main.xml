@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:backgroundTint="#605b5b"
+    android:backgroundTintMode="multiply"
+    android:background="@drawable/sample"
     tools:context="app.favloc.com.favouritelocations.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/welcome_note"
-        android:textSize="@dimen/Title_Size"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/mainBackgroundID"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/favlocicon"
+        android:padding="15dp"
+        />
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:text="@string/welcome_note_1"
+        android:id="@+id/welcomeNote1"
+        android:layout_below="@+id/mainBackgroundID"
+        android:layout_centerHorizontal="true"
+        android:textSize="25sp"
+        android:textColor="#FFF"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="@string/welcome_note_2"
+        android:layout_below="@+id/welcomeNote1"
+        android:layout_centerHorizontal="true"
+        android:textSize="25sp"
+        android:textColor="#FFF"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

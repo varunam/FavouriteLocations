@@ -59,4 +59,7 @@
     <string name="logOut">Log out</string>
     <string name="FollowUsFB">Follow us on Facebook</string>
     <string name="sharecurrent">CAPTURE AND SHARE</string>
+    <string name="welcome_note_2">Favourite Locations</string>
+    <string name="welcome_note_1">Welcome to</string>
+    <string name="infoWindowTitle">Favourite Location</string>
 </resources>

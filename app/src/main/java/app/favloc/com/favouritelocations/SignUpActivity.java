@@ -194,7 +194,7 @@ public class SignUpActivity extends AppCompatActivity {
                 .setDisplayName(firstname)
                 .build();
         firebaseAuth.getCurrentUser().updateProfile(userProfileChangeRequest);
-        databaseReference.child(firebaseuser.getUid()).setValue(userData);
+        databaseReference.child(firebaseAuth.getCurrentUser().getUid()).setValue(userData);
 
     }
 
