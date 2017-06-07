@@ -160,38 +160,40 @@ public class SignUpActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        saveUserInfo(firstname, lastname, dateofbirth, localityAddress, email, gender);
-                        firebaseAuth.getCurrentUser().sendEmailVerification()
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(getApplicationContext(), "Verification email sent to " + firebaseuser.getEmail(), Toast.LENGTH_LONG).show();
-                                            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-                                            finish();
-                                        } else {
-                                            progressDialog.dismiss();
-                                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        if(task.isSuccessful())
+                        {
+                            firebaseAuth.getCurrentUser().sendEmailVerification()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                progressDialog.dismiss();
+                                                Toast.makeText(getApplicationContext(), "Verification email sent to " + email, Toast.LENGTH_LONG).show();
+                                                saveUserInfo(firstname, lastname, dateofbirth, localityAddress, email, gender);
+                                                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                                                finish();
+                                            } else {
+                                                progressDialog.dismiss();
+                                                Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                        }
+                        else
+                        {
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
     }
 
     private void saveUserInfo(String firstname, String lastname, String dateofbirth, String localityAddress, String email, String gender) {
         UserData userData = new UserData(firstname, lastname, dateofbirth, localityAddress, gender, email);
-
-        if(firstname.equals(""))
-            Toast.makeText(getApplicationContext(),"Please try again", Toast.LENGTH_LONG).show();
-        else
-        {
-            UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(firstname)
-                    .build();
-            firebaseuser.updateProfile(userProfileChangeRequest);
-        }
+        UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
+                .setDisplayName(firstname)
+                .build();
+        firebaseAuth.getCurrentUser().updateProfile(userProfileChangeRequest);
         databaseReference.child(firebaseuser.getUid()).setValue(userData);
 
     }

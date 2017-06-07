@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //progress dialog to use wherever required
     private ProgressDialog progressDialog;
-    private AlertDialog.Builder alertDialog;
+    private AlertDialog.Builder alertDialog, exitDialog;
 
     //TAG for logging
     private static String TAG = "LoginActivity";
@@ -182,6 +182,7 @@ public class LoginActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
 
         progressDialog = new ProgressDialog(this);
+        exitDialog = new AlertDialog.Builder(this);
     }
 
     //method to handle activity result
@@ -248,17 +249,17 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        alertDialog.setTitle("Exit Favourite locations?");
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        exitDialog.setTitle("Exit Favourite locations?");
+        exitDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 LoginActivity.this.finish();
                 Toast.makeText(getApplicationContext(),"Good Bye!", Toast.LENGTH_LONG).show();
             }
         });
-        alertDialog.setNegativeButton("Cancel", null);
-        alertDialog.setIcon(R.drawable.exiticon);
-        alertDialog.create().show();
+        exitDialog.setNegativeButton("Cancel", null);
+        exitDialog.setIcon(R.drawable.exiticon);
+        exitDialog.create().show();
     }
 
 }
