@@ -105,7 +105,8 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
     private Uri profileUri;
 
     private String currentLat, currentLng;
-    private static int LocationCount = 0, GALLERY_INTENT = 2, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 5;
+    private static int LocationCount = 0;
+    private static final int GALLERY_INTENT = 2, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 5, LOCATION_PERMISSION_GRANTED = 2000;
     private int uploadCount = 0;
     private boolean facebookUser = false;
     private String facebookUserId, photoUri;
@@ -177,14 +178,11 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(facebookUser)
-                    Toast.makeText(getApplicationContext(),"FB Profile Image cannot be updated here!", Toast.LENGTH_LONG).show();
-                else
-                {
-                    if(ContextCompat.checkSelfPermission(HomepageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                    {
-                        if(ActivityCompat.shouldShowRequestPermissionRationale(HomepageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE))
-                        {
+                if (facebookUser)
+                    Toast.makeText(getApplicationContext(), "FB Profile Image cannot be updated here!", Toast.LENGTH_LONG).show();
+                else {
+                    if (ContextCompat.checkSelfPermission(HomepageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(HomepageActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                             //Toast.makeText(getApplicationContext(),"Rationale",Toast.LENGTH_LONG).show();
                             alertDialog.setTitle("Requires permission");
                             alertDialog.setMessage("This app requires permission to read device storage to update profile picture");
@@ -192,24 +190,22 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                             alertDialog.setPositiveButton("Ask me again", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ActivityCompat.requestPermissions(HomepageActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                                    ActivityCompat.requestPermissions(HomepageActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                                 }
                             });
-                            alertDialog.setNegativeButton("ok",null);
+                            alertDialog.setNegativeButton("ok", null);
                             alertDialog.create().show();
-                        }
-                        else
-                        {
-                            ActivityCompat.requestPermissions(HomepageActivity.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                        } else {
+                            ActivityCompat.requestPermissions(HomepageActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                         }
                     }
                     else
-                    {
                         selectPhotoFromGallery();
-                    }
                 }
             }
         });
+
+
 
         if(!networkIsAvailable())
         {
@@ -253,9 +249,11 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                 alertDialog.create().show();
             }
             else {
-                ActivityCompat.requestPermissions(HomepageActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 2000);
+                ActivityCompat.requestPermissions(HomepageActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_GRANTED);
             }
         }
+
+
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -527,7 +525,7 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                 .build();
 
         mGoogleApiClient.connect();
-
+        //Toast.makeText(getApplicationContext(),"Map Ready", Toast.LENGTH_LONG).show();
         if (mGoogleMap!=null)
         {
             mGoogleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
@@ -622,6 +620,7 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
         LocationSettingsRequest.Builder checkGps = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);
 
+        //Toast.makeText(getApplicationContext(),"On Connected", Toast.LENGTH_LONG).show();
         checkGps.setAlwaysShow(true);
         PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, checkGps.build());
 
@@ -821,5 +820,28 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
             profileUri = data.getData();
             uploadProfileImage();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode)
+        {
+            case LOCATION_PERMISSION_GRANTED: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    initMap();
+
+                } else {
+
+                    Toast.makeText(getApplicationContext(),"Permission Denied", Toast.LENGTH_LONG).show();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+            }
+        }
+
+        // other 'case' lines to check for other
+        // permissions this app might request
     }
 }
