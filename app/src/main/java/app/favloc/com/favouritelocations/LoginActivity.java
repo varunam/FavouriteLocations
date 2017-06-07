@@ -65,9 +65,11 @@ public class LoginActivity extends AppCompatActivity {
                 if (info.getProviderId().equals("facebook.com")) {
                     startActivity(new Intent(LoginActivity.this, HomepageActivity.class));
                     finish();
+                    return;
                 } else if (firebaseUser.isEmailVerified()) {
                     startActivity(new Intent(LoginActivity.this, HomepageActivity.class));
                     finish();
+                    return;
                 }
             }
         }
