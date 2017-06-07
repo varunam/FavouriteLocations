@@ -215,9 +215,8 @@ public class LoginActivity extends AppCompatActivity {
                             {
                                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
                                 alertDialog.setTitle("Alert");
-                                alertDialog.setIcon(R.drawable.alert);
                                 alertDialog.setMessage("Please verify your email to login");
-                                alertDialog.setPositiveButton("Send email again", new DialogInterface.OnClickListener() {
+                                alertDialog.setPositiveButton("Send mail again", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         firebaseAuth.getCurrentUser().sendEmailVerification()
