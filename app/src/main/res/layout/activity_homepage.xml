@@ -82,16 +82,35 @@
                     android:layout_height="wrap_content" />
             </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/hpcaptureButtonID"
+            <LinearLayout
                 android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:background="@color/colorPrimary"
-                android:textColor="@color/buttonTextLight"
-                android:textStyle="bold"
-                android:text="@string/captureLocationHint"
-                android:layout_width="150dp"
-                android:layout_height="35dp" />
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/hpcaptureButtonID"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/buttonTextLight"
+                    android:textStyle="bold"
+                    android:text="@string/captureLocationHint"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp" />
+
+                <Button
+                    android:layout_width="160dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/sharecurrent"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/buttonTextLight"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:id="@+id/shareCurrentLocationID" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/hpDisplayCountID"
@@ -101,18 +120,6 @@
                 android:text="@string/displayCountHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
-            <Button
-                android:layout_width="160dp"
-                android:layout_height="35dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/sharecurrent"
-                android:background="@color/colorPrimary"
-                android:textColor="@color/buttonTextLight"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:id="@+id/shareCurrentLocationID" />
 
         </LinearLayout>
 
