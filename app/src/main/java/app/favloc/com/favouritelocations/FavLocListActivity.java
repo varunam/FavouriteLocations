@@ -114,4 +114,5 @@ public class FavLocListActivity extends AppCompatActivity {
         else
             return super.onOptionsItemSelected(item);
     }
+
 }

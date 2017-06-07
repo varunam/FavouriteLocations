@@ -3,6 +3,7 @@ package app.favloc.com.favouritelocations;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,9 @@ public class ManualSaveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_save);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mslat = (EditText) findViewById(R.id.MSLatID);
         mslng = (EditText) findViewById(R.id.MSlngID);
@@ -84,5 +88,16 @@ public class ManualSaveActivity extends AppCompatActivity {
         super.onBackPressed();
         startActivity(new Intent(ManualSaveActivity.this, HomepageActivity.class));
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home)
+        {
+            onBackPressed();
+            return  true;
+        }
+        else
+            return super.onOptionsItemSelected(item);
     }
 }
