@@ -14,8 +14,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
-
 public class ManualSaveActivity extends AppCompatActivity {
 
     private EditText mslat, mslng, msname, mslandmark;
@@ -74,30 +72,16 @@ public class ManualSaveActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (lat.contains(".."))
+                if (dotCount(lat, '.') > 1)
                 {
                     mslat.setError("Doesn't exist on Earth!");
                     mslat.requestFocus();
                     return;
                 }
 
-                if (lng.contains(".."))
-                {
-                    mslng.setError("Doesn't exist on Earth!");
-                    mslng.requestFocus();
-                    return;
-                }
-
-                if (dotCount(lat, '.') > 1)
-                {
-                    mslat.setError("Invalid Latitude");
-                    mslat.requestFocus();
-                    return;
-                }
-
                 if (dotCount(lng, '.') > 1)
                 {
-                    mslng.setError("Invalid Longitude");
+                    mslng.setError("Doesn't exist on Earth!");
                     mslng.requestFocus();
                     return;
                 }

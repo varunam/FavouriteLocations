@@ -26,7 +26,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,7 +38,6 @@ import android.widget.Toast;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiActivity;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -55,7 +53,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -80,8 +77,6 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.util.zip.Inflater;
-
 public class HomepageActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
 
     private Button saveButton;
@@ -100,15 +95,15 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
     private LocationRequest mLocationRequest;
     private LocationManager locationManager;
 
-    private AlertDialog.Builder alertDialog, alertDialog2;
+    private AlertDialog.Builder alertDialog, alertDialog2, locationAlreadyPresentDialog;
     private ProgressDialog uploadImageDialog, removeImageDialog;
     private Uri profileUri;
 
     private String currentLat, currentLng;
     private static int LocationCount = 0;
     private static final int GALLERY_INTENT = 2, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 5, LOCATION_PERMISSION_GRANTED = 2000;
-    private int uploadCount = 0;
-    private boolean facebookUser = false;
+    private int uploadCount = 0, sameLocationCount = 0;
+    private boolean facebookUser = false, locationExists = false;
     private String facebookUserId, photoUri;
 
     private Marker marker;
@@ -175,6 +170,27 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
             {
             }
         }
+
+        locCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(locCount.getText().toString().equals("You have not saved any favourite location yet"))
+                {
+                    alertDialog.setTitle("Save a location to continue...");
+                    alertDialog.setPositiveButton("ok", null);
+                    alertDialog.setIcon(R.drawable.alerticon);
+                    alertDialog.create().show();
+                }
+                else if(locCount.getText().toString().equals("Loading..."))
+                    Toast.makeText(getApplicationContext(),"Loading... please wait", Toast.LENGTH_LONG).show();
+                else
+                {
+                    startActivity(new Intent(HomepageActivity.this, FavLocListActivity.class));
+                    finish();
+                }
+            }
+        });
+
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -368,6 +384,7 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
             }
             else
             {
+                Toast.makeText(getApplicationContext(),"Opening Gallery...", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(intent, GALLERY_INTENT);
@@ -431,17 +448,63 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
     private void saveLocation() {
         setMarker(currentLat, currentLng);
         marker.showInfoWindow();
-        String locationName = nameOfLocation.getText().toString().trim();
-        String locationLandmark = landmarkOfLocation.getText().toString().trim();
-        String locationLat = currentLat;
-        String locationLng = currentLng;
+        final String locationName = nameOfLocation.getText().toString().trim();
+        final String locationLandmark = landmarkOfLocation.getText().toString().trim();
+        final String locationLat = currentLat;
+        final String locationLng = currentLng;
 
-        //Toast.makeText(getApplicationContext(),"Latitude: " + currentLat + "\nLongitude: " + currentLng ,Toast.LENGTH_LONG).show();
-        String id = databaseReference.push().getKey();
-        locData data = new locData(locationName, locationLandmark, locationLat, locationLng, id);
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        databaseReference.child(user.getUid()).child("Locations").child(id).setValue(data);
-        Toast.makeText(getApplicationContext(),"Saved location successfully!", Toast.LENGTH_LONG).show();
+        /*//Toast.makeText(getApplicationContext(),"Latitude: " + currentLat + "\nLongitude: " + currentLng ,Toast.LENGTH_LONG).show();
+        //below code was written to validate if duplicate record is being added. this feature can be given in further releases
+        dbCountReference = FirebaseDatabase.getInstance().getReference().child(firebaseAuth.getCurrentUser().getUid()).child("Locations");
+
+        dbCountReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds: dataSnapshot.getChildren()) {
+                    if(locationLat.equals(ds.getValue(locData.class).getLocLat()) )
+                            if(locationLng.equals(ds.getValue(locData.class).getLocLng()))
+                    {
+                        sameLocationCount++;
+                        if (sameLocationCount > 1)
+                        {
+                            Log.d("DataSnapshot", ds.getValue(locData.class).getLocLat());
+                            locationAlreadyPresentDialog.setTitle("Location exists")
+                                    .setMessage("Details of existing location \n Name: " + ds.getValue(locData.class).getLocName()
+                                            + "\n LandMark: " + ds.getValue(locData.class).getLocLandMark()
+                                            + "\n Latitude: " + ds.getValue(locData.class).getLocLat()
+                                            + "\n Longitude: " + ds.getValue(locData.class).getLocLng())
+                                    .setIcon(R.drawable.alert)
+                                    .setCancelable(true)
+                                    .setPositiveButton("OK", null)
+                                    .setNegativeButton("FavLocs List", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            startActivity(new Intent(HomepageActivity.this, FavLocListActivity.class));
+                                            finish();
+                                        }
+                                    })
+                                    .create().show();
+                            locationExists = true;
+                            return;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(),"Data Error. Please try again...", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        if (!locationExists){*/
+            String id = databaseReference.push().getKey();
+            locData data = new locData(locationName, locationLandmark, locationLat, locationLng, id);
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            databaseReference.child(user.getUid()).child("Locations").child(id).setValue(data);
+            Toast.makeText(getApplicationContext(),"FavLoc saved successfully!", Toast.LENGTH_LONG).show();
+        //}
+
     }
 
     private void setMarker(String currentLat, String currentLng){
@@ -479,6 +542,7 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
 
         alertDialog = new AlertDialog.Builder(this);
         alertDialog2 = new AlertDialog.Builder(this);
+        locationAlreadyPresentDialog = new AlertDialog.Builder(this);
         uploadImageDialog = removeImageDialog = new ProgressDialog(this);
         locationManager = (LocationManager) getSystemService(LocationManager.GPS_PROVIDER);
 
@@ -735,13 +799,11 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                     body.append(" Please fill in your feedback/grievances  \n");
                     body.append("\n Regards, \n");
                     body.append(firebaseAuth.getCurrentUser().getDisplayName());
-                    String developers[] = {"varunvgnc@gmail.com"};
                     String company[] = {"0maxtech0@gmail.com"};
 
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto","",null));
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Favourite-Locations - " + firebaseAuth.getCurrentUser().getDisplayName()+" wants to cantact you");
-                    intent.putExtra(Intent.EXTRA_EMAIL, developers);
-                    intent.putExtra(Intent.EXTRA_CC, company);
+                    intent.putExtra(Intent.EXTRA_EMAIL, company);
                     intent.putExtra(Intent.EXTRA_TEXT, body.toString());
                     startActivity(intent);
                 }
