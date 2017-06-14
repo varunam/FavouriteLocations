@@ -3,6 +3,8 @@ package app.favloc.com.favouritelocations;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -90,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                     lipassword.setError("Required");
             }
         });
+
 
         //signing in on clicking continue with facebook
         liFBLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
