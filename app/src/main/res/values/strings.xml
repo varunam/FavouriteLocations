@@ -2,7 +2,7 @@
     <string name="app_name">Favourite Locations</string>
     <string name="title_activity_login">Sign in</string>
     <string name="facebook_app_id">504014093263190</string>
-    <string name="maps_api_key">AIzaSyAU7AUlI890Dmb0513KPpY5OTSb-zL-AYo</string>
+    <string name="maps_api_key">AIzaSyC05mqPAG8DYNCk-zxHFJz7HtzEJjOofKA</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -55,10 +55,10 @@
     <string name="aboutApp">About app</string>
     <string name="rateThisApp">Rate this App</string>
     <string name="appByMaxTech">App Powered by MaxTech</string>
-    <string name="contactUs">Contact us</string>
+    <string name="contactUs">About us</string>
     <string name="logOut">Log out</string>
     <string name="FollowUsFB">Follow us on Facebook</string>
-    <string name="sharecurrent">CAPTURE AND SHARE</string>
+    <string name="sharecurrent">Share location</string>
     <string name="welcome_note_2">Favourite Locations</string>
     <string name="welcome_note_1">Welcome to</string>
     <string name="infoWindowTitle">Favourite Location</string>
@@ -68,4 +68,6 @@
     <string name="newPasswordHint">New Password</string>
     <string name="confirmPasswordHint">Confirm Password</string>
     <string name="updtePassword">Update Password</string>
+    <string name="versioncopyright">Version 2.1.2 &#169; MaxTech, Bengaluru</string>
+    <string name="followusYoutubeHint">Subscribe</string>
 </resources>

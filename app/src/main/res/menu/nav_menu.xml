@@ -45,11 +45,16 @@
                 android:title="@string/contactUs">
             </item>
 
-
             <item
                 android:id="@+id/followUsID"
                 android:icon="@drawable/com_facebook_button_icon"
                 android:title="@string/FollowUsFB" />
+
+            <item
+                android:id="@+id/youtubeID"
+                android:title="@string/followusYoutubeHint"
+                android:icon="@drawable/youtubeicon"
+            />
 
             <item
                 android:id="@+id/logoutID"
@@ -57,5 +62,10 @@
                 android:actionViewClass="android.support.v7.widget.SearchView"
                 android:title="@string/logOut" />
         </menu>
+    </item>
+
+    <item
+        android:title="@string/versioncopyright">
+
     </item>
 </menu>

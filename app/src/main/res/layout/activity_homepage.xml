@@ -100,7 +100,7 @@
                     android:layout_height="35dp" />
 
                 <Button
-                    android:layout_width="160dp"
+                    android:layout_width="150dp"
                     android:layout_height="35dp"
                     android:layout_marginLeft="20dp"
                     android:text="@string/sharecurrent"

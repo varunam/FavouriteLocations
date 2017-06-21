@@ -318,13 +318,6 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                     return;
                 }
 
-                if(locationLandmark.isEmpty())
-                {
-                    landmarkOfLocation.setError("Required");
-                    landmarkOfLocation.requestFocus();
-                    return;
-                }
-                        saveLocation();
                         Toast.makeText(getApplicationContext(), "Sharing location...", Toast.LENGTH_LONG).show();
                         Intent sendIntent = new Intent();
                         sendIntent.setAction(Intent.ACTION_SEND);
@@ -786,12 +779,37 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
             startActivity(new Intent(HomepageActivity.this, ManualSaveActivity.class));
             finish();
         }
+
+        else if (id == R.id.youtubeID)
+        {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/channel/UCrGvvyEEQnZEOyg_RwMdkrw")));
+            /*Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://www.youtube.com/channel/UCrGvvyEEQnZEOyg_RwMdkrw"));
+            intent.setPackage("com.google.android.youtube");
+            startActivity(intent);*/
+        }
+
         else if (id == R.id.contactUsID)
         {
             alertDialog2.setTitle("MaxTech, Bengaluru");
-            alertDialog2.setMessage("Varun Gupta \nPh: 9886364759");
-            alertDialog2.setNegativeButton("OK", null);
-            alertDialog2.setPositiveButton("Send Email", new DialogInterface.OnClickListener() {
+            alertDialog2.setMessage("In this fast-paced world, It is very important to keep yourself in par with upcoming/ongoing" +
+                    " technologies. \n" + "\nMaxTech is a technical community which does the the job of assimilating content from " +
+                    "various tech sites and always keep you up to date with maximum technology! \n");
+            alertDialog2.setIcon(R.drawable.maxtechlogo);
+            alertDialog2.setNegativeButton("Follow us", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent facebookAppIntent;
+                    try {
+                        facebookAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/981281535243682"));
+                        startActivity(facebookAppIntent);
+                    } catch (ActivityNotFoundException e) {
+                        facebookAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://facebook.com/0MaxTech0"));
+                        startActivity(facebookAppIntent);
+                    }
+                }
+            });
+            alertDialog2.setPositiveButton("Get in touch", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     StringBuilder body = new StringBuilder();
@@ -800,7 +818,6 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                     body.append("\n Regards, \n");
                     body.append(firebaseAuth.getCurrentUser().getDisplayName());
                     String company[] = {"0maxtech0@gmail.com"};
-
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto","",null));
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Favourite-Locations - " + firebaseAuth.getCurrentUser().getDisplayName()+" wants to cantact you");
                     intent.putExtra(Intent.EXTRA_EMAIL, company);
@@ -808,7 +825,6 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                     startActivity(intent);
                 }
             });
-            alertDialog2.setIcon(R.drawable.developericon);
             alertDialog2.create().show();
 
         }
@@ -832,9 +848,9 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
         {
             alertDialog2.setTitle("Favourite Locations");
             alertDialog2.setIcon(R.drawable.favlocicon);
-            alertDialog2.setMessage("FavLoc simplifies the way you are bookmarking your favourite locations!\n" +
+            alertDialog2.setMessage("FavLoc simplifies the way you bookmark your favourite locations!\n" +
                     "The app helps to capture, share or navigate to any of your favourite locations\n" +
-                    "Contact us if you are interested in learning \"Android App Development\" \n");
+                    "Share your current location through any of the social apps you have!" );
             alertDialog2.setPositiveButton("OK", null);
             alertDialog2.setNegativeButton(null, null);
             alertDialog2.create().show();
