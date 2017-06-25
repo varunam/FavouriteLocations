@@ -70,4 +70,7 @@
     <string name="updtePassword">Update Password</string>
     <string name="versioncopyright">Version 2.1.2 &#169; MaxTech, Bengaluru</string>
     <string name="followusYoutubeHint">Subscribe</string>
+    <string name="gps_network_not_enabled">This app requires GPS to be enabled</string>
+    <string name="open_location_settings">Enable GPS</string>
+    <string name="Cancel">cancel</string>
 </resources>
