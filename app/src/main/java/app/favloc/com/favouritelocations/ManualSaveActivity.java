@@ -36,6 +36,21 @@ public class ManualSaveActivity extends AppCompatActivity {
         mslandmark = (EditText) findViewById(R.id.MSlandmarkID);
         mscapture = (Button) findViewById(R.id.MSCaptureID);
 
+            Intent i = getIntent();
+            String name = i.getExtras().get("nameKey").toString();
+            String landmark = i.getExtras().get("landMarkKey").toString();
+            String lat = i.getExtras().get("latKey").toString();
+            String lng = i.getExtras().getString("lngKey");
+
+            msname.setText(name);
+            mslandmark.setText(landmark);
+            mslat.setText(lat);
+            mslng.setText(lng);
+            mslat.setEnabled(false);
+            mslng.setEnabled(false);
+
+
+
         mscapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

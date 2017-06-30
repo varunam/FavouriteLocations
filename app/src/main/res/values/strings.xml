@@ -57,7 +57,7 @@
     <string name="appByMaxTech">App Powered by MaxTech</string>
     <string name="contactUs">About us</string>
     <string name="logOut">Log out</string>
-    <string name="FollowUsFB">Follow us on Facebook</string>
+    <string name="FollowUsFB">Follow us</string>
     <string name="sharecurrent">Share location</string>
     <string name="welcome_note_2">Favourite Locations</string>
     <string name="welcome_note_1">Welcome to</string>
@@ -68,9 +68,14 @@
     <string name="newPasswordHint">New Password</string>
     <string name="confirmPasswordHint">Confirm Password</string>
     <string name="updtePassword">Update Password</string>
-    <string name="versioncopyright">Version 2.1.2 &#169; MaxTech, Bengaluru</string>
+    <string name="versioncopyright">Version 2.1.3 &#169; MaxTech, Bengaluru</string>
     <string name="followusYoutubeHint">Subscribe</string>
     <string name="gps_network_not_enabled">This app requires GPS to be enabled</string>
     <string name="open_location_settings">Enable GPS</string>
     <string name="Cancel">cancel</string>
+    <string name="qr_code_name_hint">LocationName</string>
+    <string name="scanQR">Scan QR Code</string>
+    <string name="save">save</string>
+    <string name="edit">EDIT</string>
+    <string name="referFriend">Refer a friend</string>
 </resources>

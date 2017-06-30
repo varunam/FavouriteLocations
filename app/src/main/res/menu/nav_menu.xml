@@ -11,10 +11,15 @@
                     android:id="@+id/savedFavLocsID"
                     android:icon="@drawable/favlocnavicon"/>
 
-                <item
+                <!--<item
                     android:title="@string/saveManualFavloc"
                     android:id="@+id/saveManualFavLocsID"
-                    android:icon="@drawable/favlocnavicon"/>
+                    android:icon="@drawable/favlocnavicon"/>-->
+
+                <item
+                    android:title="@string/scanQR"
+                    android:id="@+id/scanQRFavLoc"
+                    android:icon="@drawable/qricon"/>
 
                 <item
                     android:title="@string/updatePasswordHint"
@@ -55,6 +60,12 @@
                 android:title="@string/followusYoutubeHint"
                 android:icon="@drawable/youtubeicon"
             />
+
+            <item
+                android:id="@+id/referFriendID"
+                android:icon="@drawable/shareshare"
+                android:title="@string/referFriend"
+                />
 
             <item
                 android:id="@+id/logoutID"

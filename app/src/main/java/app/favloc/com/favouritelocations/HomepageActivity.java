@@ -75,11 +75,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.zxing.Result;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-public class HomepageActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
+
+public class HomepageActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener, ZXingScannerView.ResultHandler {
 
     private Button saveButton;
     private EditText nameOfLocation, landmarkOfLocation;
@@ -103,12 +106,13 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
 
     private String currentLat, currentLng;
     private static int LocationCount = 0;
-    private static final int GALLERY_INTENT = 2, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 5, LOCATION_PERMISSION_GRANTED = 2000;
-    private int uploadCount = 0, sameLocationCount = 0;
-    private boolean facebookUser = false, locationExists = false;
+    private static final int GALLERY_INTENT = 2, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 5, LOCATION_PERMISSION_GRANTED = 2000, CAMERA_PERMISSION_GRANTED = 1255;
+    private int uploadCount = 0;
+    private boolean facebookUser = false, cameraOpen = false;
     private String facebookUserId, photoUri;
 
     private Marker marker;
+    private ZXingScannerView scanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -512,6 +516,8 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
 
+        scanner = new ZXingScannerView(this);
+
         alertDialog = new AlertDialog.Builder(this);
         alertDialog2 = new AlertDialog.Builder(this);
         locationAlreadyPresentDialog = new AlertDialog.Builder(this);
@@ -695,7 +701,8 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
             }
 
             checkGps.setAlwaysShow(true);
-        } else {
+        } else
+            {
             final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
             if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -718,7 +725,7 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
 
             if (!gps_enabled && !network_enabled) {
                 // notify user
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getApplicationContext());
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
                 dialog.setMessage(getResources().getString(R.string.gps_network_not_enabled));
                 dialog.setPositiveButton(getResources().getString(R.string.open_location_settings), new DialogInterface.OnClickListener() {
                     @Override
@@ -737,7 +744,7 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
 
                     }
                 });
-                dialog.show();
+                dialog.create().show();
             }
         }
     }
@@ -755,9 +762,10 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         dialog.cancel();
                         Toast.makeText(getApplicationContext(), "Enable GPS to save your current location!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Enable GPS to save your current location!", Toast.LENGTH_SHORT).show();
                     }
-                })
-                .setIcon(R.drawable.alerticon);
+                });
+                builder.setIcon(R.drawable.alerticon);
         final AlertDialog alert = builder.create();
         alert.show();
     }
@@ -788,20 +796,27 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onBackPressed() {
         DrawerLayout layout = (DrawerLayout) findViewById(R.id.drawerLayoutID);
+        if(cameraOpen)
+        {
+            startActivity(new Intent(this, HomepageActivity.class));
+            cameraOpen=false;
+            finish();
+            return;
+        }
         if (layout.isDrawerOpen(GravityCompat.START))
-            layout.closeDrawer(GravityCompat.START);
+                layout.closeDrawer(GravityCompat.START);
         else {
-            alertDialog.setTitle("Exit Favourite locations?");
-            alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    HomepageActivity.this.finish();
-                    Toast.makeText(getApplicationContext(), "Good Bye!", Toast.LENGTH_LONG).show();
-                }
-            });
-            alertDialog.setNegativeButton("Cancel", null);
-            alertDialog.setIcon(R.drawable.exiticon);
-            alertDialog.create().show();
+                alertDialog.setTitle("Exit Favourite locations?");
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        HomepageActivity.this.finish();
+                        Toast.makeText(getApplicationContext(), "Good Bye!", Toast.LENGTH_LONG).show();
+                    }
+                });
+                alertDialog.setNegativeButton("Cancel", null);
+                alertDialog.setIcon(R.drawable.exiticon);
+                alertDialog.create().show();
         }
     }
 
@@ -816,16 +831,28 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
             loginManager.logOut();
             startActivity(new Intent(HomepageActivity.this, LoginActivity.class));
             finish();
-        } else if (id == R.id.saveManualFavLocsID) {
+        }
+       /* else if (id == R.id.saveManualFavLocsID) {
             startActivity(new Intent(HomepageActivity.this, ManualSaveActivity.class));
             finish();
-        } else if (id == R.id.youtubeID) {
+        }*/
+        else if (id == R.id.referFriendID)
+        {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, ("Capture all your favourite locations under one roof." +
+                    "\nShare/Navigate in just few clicks!" +
+                    "\n\nDownload Favourite Locations app now!\n" +
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + getApplicationContext().getPackageName())
+                    + "\n\nTrailer here:\n" + Uri.parse("https://www.youtube.com/watch?v=ypOLFiONOpY")));
+            sendIntent.setType("text/plain");
+            sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            startActivity(sendIntent);
+        }
+        else if (id == R.id.youtubeID) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/channel/UCrGvvyEEQnZEOyg_RwMdkrw")));
-            /*Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("https://www.youtube.com/channel/UCrGvvyEEQnZEOyg_RwMdkrw"));
-            intent.setPackage("com.google.android.youtube");
-            startActivity(intent);*/
-        } else if (id == R.id.contactUsID) {
+        }
+        else if (id == R.id.contactUsID) {
             alertDialog2.setTitle("MaxTech, Bengaluru");
             alertDialog2.setMessage("In this fast-paced world, It is very important to keep yourself in par with upcoming/ongoing" +
                     " technologies. \n" + "\nMaxTech is a technical community which does the the job of assimilating content from " +
@@ -862,7 +889,32 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
             });
             alertDialog2.create().show();
 
-        } else if (id == R.id.followUsID) {
+        }
+        else if (id == R.id.scanQRFavLoc)
+        {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(HomepageActivity.this, Manifest.permission.CAMERA)) {
+                    alertDialog.setTitle("Requires permission");
+                    alertDialog.setMessage("This app requires permission to access your camera to scan QR Code");
+                    alertDialog.setCancelable(false);
+                    alertDialog.setPositiveButton("Ask me again", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(HomepageActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_GRANTED);
+                        }
+                    });
+                    alertDialog.setNegativeButton("ok", null);
+                    alertDialog.create().show();
+                } else {
+                    ActivityCompat.requestPermissions(HomepageActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_GRANTED);
+                }
+            }
+            cameraOpen=true;
+            setContentView(scanner);
+            scanner.setResultHandler(this);
+            scanner.startCamera();
+        }
+        else if (id == R.id.followUsID) {
             Intent facebookAppIntent;
             try {
                 facebookAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/981281535243682"));
@@ -925,7 +977,8 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case LOCATION_PERMISSION_GRANTED: {
+            case LOCATION_PERMISSION_GRANTED:
+                {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -937,10 +990,81 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
+                break;
+            }
+            case CAMERA_PERMISSION_GRANTED: {
+                setContentView(scanner);
+                scanner.setResultHandler(this);
+                scanner.startCamera();
+                break;
             }
         }
 
         // other 'case' lines to check for other
         // permissions this app might request
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        scanner.stopCamera();
+    }
+
+    @Override
+    public void handleResult(Result result) {
+        String resultText = result.getText();
+        final String[] resultArray = resultText.split("\\\n");
+
+        if (resultArray.length < 4)
+        {
+            Toast.makeText(getApplicationContext(),"Not a FavLoc QR Code! \n Please scan valid code", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Not a FavLoc QR Code! \n Please scan valid code", Toast.LENGTH_SHORT).show();
+            onBackPressed();
+            return;
+        }
+
+        AlertDialog.Builder qrScannedDialog = new AlertDialog.Builder(this);
+        View mView = getLayoutInflater().inflate(R.layout.qr_scanned_dialog, null);
+
+        TextView scannedName = (TextView) mView.findViewById(R.id.qrScannedName);
+        TextView scannedLandMark = (TextView) mView.findViewById(R.id.qrScannedLandMark);
+        TextView scannedLat = (TextView) mView.findViewById(R.id.qrScannedLat);
+        TextView scannedLng = (TextView) mView.findViewById(R.id.qrScannedLng);
+        Button scannedSave = (Button) mView.findViewById(R.id.qrScannedSaveButtonID);
+        Button scannedEdit = (Button) mView.findViewById(R.id.qrScannedEditSaveButtonID);
+
+        scannedName.setText(resultArray[0]);
+        scannedLandMark.setText(resultArray[1]);
+        scannedLat.setText(resultArray[2]);
+        scannedLng.setText(resultArray[3]);
+
+        scannedSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String id = databaseReference.push().getKey();
+                locData data = new locData(resultArray[0], resultArray[1], resultArray[2], resultArray[3], id);
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                databaseReference.child(user.getUid()).child("Locations").child(id).setValue(data);
+                Toast.makeText(getApplicationContext(),"Saved location successfully!", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(HomepageActivity.this, FavLocListActivity.class));
+                finish();
+            }
+        });
+
+        scannedEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(HomepageActivity.this, ManualSaveActivity.class);
+                i.putExtra("nameKey", resultArray[0]);
+                i.putExtra("landMarkKey", resultArray[1]);
+                i.putExtra("latKey", resultArray[2]);
+                i.putExtra("lngKey", resultArray[3]);
+                startActivity(i);
+                finish();
+            }
+        });
+        cameraOpen=false;
+        qrScannedDialog.setView(mView);
+        qrScannedDialog.create().show();
     }
 }

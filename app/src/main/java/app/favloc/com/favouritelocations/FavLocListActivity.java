@@ -2,11 +2,20 @@ package app.favloc.com.favouritelocations;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,7 +24,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.oned.MultiFormatOneDReader;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,6 +47,7 @@ public class FavLocListActivity extends AppCompatActivity {
     private LocListAdapter locListAdapter;
     ArrayList<HashMap<String, String>> locArrayList = new ArrayList<>();
     private ProgressDialog progressDialog;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +115,46 @@ public class FavLocListActivity extends AppCompatActivity {
             }
         });
 
+        favLocList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AlertDialog.Builder qr_alert = new AlertDialog.Builder(FavLocListActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.qr_dialog, null);
+                ImageView qrCode = (ImageView) mView.findViewById(R.id.qr_codeID);
+                TextView qrName = (TextView) mView.findViewById(R.id.qr_nameID);
+                MultiFormatWriter writer = new MultiFormatWriter();
+                String locName = locArrayList.get(position).get("LocNameKey");
+                String locLandMark = locArrayList.get(position).get("LocLandMarkKey");
+                String locLat = locArrayList.get(position).get("LatKey");
+                String locLng = locArrayList.get(position).get("LngKey");
+                ImageView question = (ImageView) mView.findViewById(R.id.questionID);
+
+                question.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(),"Scan this code from your friend's" +
+                                " Favourite Locations app to save this location!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Scan this code from your friend's" +
+                                " Favourite Locations app to save this location!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                try {
+                    BitMatrix matrix = writer.encode(locName+"\n"+locLandMark+"\n"+locLat+"\n"+locLng+"\n", BarcodeFormat.QR_CODE, 300, 300);
+                    BarcodeEncoder encoder = new BarcodeEncoder();
+                    bitmap = encoder.createBitmap(matrix);
+                    qrCode.setImageBitmap(bitmap);
+
+                } catch (WriterException e) {
+                    e.printStackTrace();
+                }
+
+                qrName.setText(locName);
+                qr_alert.setView(mView);
+                qr_alert.create().show();
+
+            }
+        });
     }
 
     @Override
