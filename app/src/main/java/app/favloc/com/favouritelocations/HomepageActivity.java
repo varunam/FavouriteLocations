@@ -929,9 +929,11 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
         } else if (id == R.id.aboutAppID) {
             alertDialog2.setTitle("Favourite Locations");
             alertDialog2.setIcon(R.drawable.favlocicon);
-            alertDialog2.setMessage("FavLoc simplifies the way you bookmark your favourite locations!\n" +
-                    "The app helps to capture, share or navigate to any of your favourite locations\n" +
-                    "Share your current location through any of the social apps you have!");
+            alertDialog2.setMessage("Capture all your favourite locations under one roof.\n" +
+                    "Share/Navigate to any of them in just few clicks.\n" +
+                    "Click on your favourite location to generate QR Code" +
+                    " and scan the code from your friend's Favourite locations app to save!" +
+                    "\nFor any queries, Feel free to get in touch with us!");
             alertDialog2.setPositiveButton("OK", null);
             alertDialog2.setNegativeButton(null, null);
             alertDialog2.create().show();
@@ -1017,8 +1019,8 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
 
         if (resultArray.length < 4)
         {
-            Toast.makeText(getApplicationContext(),"Not a FavLoc QR Code! \n Please scan valid code", Toast.LENGTH_LONG).show();
-            Toast.makeText(getApplicationContext(),"Not a FavLoc QR Code! \n Please scan valid code", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Not a FavLoc QR Code! \nPlease scan valid code", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Not a FavLoc QR Code! \nPlease scan valid code", Toast.LENGTH_SHORT).show();
             onBackPressed();
             return;
         }
