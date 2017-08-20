@@ -25,7 +25,7 @@
 
     <ImageView
         android:id="@+id/questionID"
-        android:src="@drawable/question"
+        android:src="@drawable/aboutappicon"
         android:layout_gravity="right"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="20dp"

@@ -854,7 +854,7 @@ public class HomepageActivity extends AppCompatActivity implements OnMapReadyCal
         }
         else if (id == R.id.contactUsID) {
             alertDialog2.setTitle("MaxTech, Bengaluru");
-            alertDialog2.setMessage("In this fast-paced world, It is very important to keep yourself in par with upcoming/ongoing" +
+            alertDialog2.setMessage("In this fast-paced world, it is very important to keep yourself in par with in-trend" +
                     " technologies. \n" + "\nMaxTech is a technical community which does the the job of assimilating content from " +
                     "various tech sites and always keep you up to date with maximum technology! \n");
             alertDialog2.setIcon(R.drawable.maxtechlogo);

@@ -4,9 +4,10 @@
     android:orientation="vertical"
     android:layout_width="400dp"
     android:layout_height="180dp"
-    android:background="@drawable/whitebackground">
+    >
 
     <TextView
+        android:layout_marginTop="10dp"
         android:id="@+id/locNameID"
         android:text="@string/hpTitleHint"
         android:textStyle="bold"
@@ -46,6 +47,7 @@
     <LinearLayout
         android:gravity="center"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
